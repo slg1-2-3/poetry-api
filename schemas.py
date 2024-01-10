@@ -27,6 +27,15 @@ class PoemBase(BaseModel):
     translator_lastname: str | None = None
     isbn: str | None = None
 
+class PoemUpdate(BaseModel):
+    author_id: int | None = None
+    title: str | None = None
+    poem : str | None = None
+    translator_firstname: str | None = None
+    translator_lastname: str | None = None
+    isbn: str | None = None
+
+
 class Poem(BaseModel):
     id: int
     author_id: int

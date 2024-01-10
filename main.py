@@ -59,3 +59,8 @@ def get_poem_by_id(poem_id: int, db: Session = Depends(get_db)):
 def create_poem(author_id: int, poem: schemas.PoemCreate, db: Session = Depends(get_db)):
     poem = crud.create_poem(db=db, poem=poem, author_id=author_id)
     return poem
+
+@app.patch("/poems/{poem_id}", response_model=schemas.PoemUpdate)
+def update_poem(poem_id: int, poem: schemas.PoemUpdate, db: Session = Depends(get_db)):
+    poem = crud.update_poem(db=db, poem_update=poem, poem_id=poem_id )
+    return poem
