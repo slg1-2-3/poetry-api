@@ -60,5 +60,8 @@ def update_poem(db: Session, poem_update: schemas.PoemUpdate, poem_id: int):
         db.refresh(poem)
     return poem 
 
-def delete_poem_by_id(db: Session, id: int):
-    return print('hi')
+def delete_poem_by_id(db: Session, poem_id: int):
+    poem = db.query(models.Poem).filter(models.Poem.id == poem_id).first()
+    if poem: 
+        db.delete(poem)
+        db.commit()

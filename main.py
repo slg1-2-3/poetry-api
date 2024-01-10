@@ -64,3 +64,8 @@ def create_poem(author_id: int, poem: schemas.PoemCreate, db: Session = Depends(
 def update_poem(poem_id: int, poem: schemas.PoemUpdate, db: Session = Depends(get_db)):
     poem = crud.update_poem(db=db, poem_update=poem, poem_id=poem_id )
     return poem
+
+@app.delete("/poems/{poem_id}")
+def delete_poem_by_id(poem_id: int, db: Session =Depends(get_db)):
+    poem = crud.delete_poem_by_id(db=db, poem_id=poem_id)
+    return HTTPException(status_code=204, detail="Deleted successfully, no data returned")
