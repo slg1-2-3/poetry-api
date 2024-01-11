@@ -17,7 +17,7 @@ Long Term Goals:
 
 ### Notes
 
-SQL Commands to make my tables in postgresql (pgAdmin 🐘)
+SQL Commands to make my tables in mysql (🐬)
 
 create table authors(
     id SERIAL INTEGER

@@ -8,7 +8,7 @@ class AuthorCreate(AuthorBase):
     pass
 
 class Author(AuthorBase):
-    id: int
+    id: str
 
     class Config:
         from_attributes = True
@@ -19,8 +19,8 @@ class AuthorUpdate(AuthorBase):
     lastname: str | None = None
 
 class PoemBase(BaseModel):
-    id: int
-    author_id: int
+    id: str
+    author_id: str
     title: str | None = None
     poem : str
     translator_firstname: str | None = None
@@ -28,7 +28,7 @@ class PoemBase(BaseModel):
     isbn: str | None = None
 
 class PoemUpdate(BaseModel):
-    author_id: int | None = None
+    author_id: str | None = None
     title: str | None = None
     poem : str | None = None
     translator_firstname: str | None = None
@@ -37,8 +37,8 @@ class PoemUpdate(BaseModel):
 
 
 class Poem(BaseModel):
-    id: int
-    author_id: int
+    id: str
+    author_id: str
     title: str | None = None
     poem: str
 

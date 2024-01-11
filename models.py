@@ -1,13 +1,16 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, Integer
+import uuid
+from sqlalchemy import Boolean, Column, ForeignKey, String, Text
 from sqlalchemy.orm import relationship
 
 from database import Base
 
+def generate_uuid():
+    return str(uuid.uuid4())
 
 class Author(Base):
     __tablename__ = 'authors'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(100), primary_key=True, default=generate_uuid)
     firstname = Column(String(100))
     lastname = Column(String(100))
 
@@ -16,8 +19,8 @@ class Author(Base):
 class Poem(Base):
     __tablename__ = 'poems'
 
-    id = Column(Integer, primary_key=True, index=True)
-    author_id = Column(Integer, ForeignKey("authors.id"))
+    id = Column(String(100), primary_key=True, default=generate_uuid)
+    author_id = Column(String(100), ForeignKey("authors.id"))
     title = Column(String(255))
     poem = Column(Text)
     translator_firstname = Column(String(255))
