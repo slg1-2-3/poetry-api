@@ -28,3 +28,10 @@ class Poem(Base):
     isbn = Column(String(50))
 
     authors = relationship("Author", back_populates="poems")
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(String(255), primary_key=True, default=generate_uuid)
+    username = Column(String(50), nullable=False)
+    password = Column(String(255), nullable=False)

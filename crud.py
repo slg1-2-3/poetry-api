@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, delete, update
-import models, schemas
+import models, schemas, security
+
+from fastapi import HTTPException
 
 # author cruds
 
@@ -65,3 +67,21 @@ def delete_poem_by_id(db: Session, poem_id: int):
     if poem: 
         db.delete(poem)
         db.commit()
+
+# user cruds
+# putting the user-db functions here for now
+        
+def create_user(db: Session, user: schemas.UserCreate):
+    existing_user = db.query(models.User).filter(models.User.username == user.username).first()
+    if existing_user:
+        raise HTTPException(status_code=409, detail="Username already exists, please select a different username")
+    encrypted_password = security.hash_password(user.password) 
+    db_new_user = models.User(username=user.username, password=encrypted_password)
+    db.add(db_new_user)
+    db.commit()
+    db.refresh(db_new_user)
+    return db_new_user
+
+def get_user(db: Session, user: schemas.User):
+    user = db.query(models.User).filter(models.User.username == user.username, models.User.password == user.password).first()
+    return user

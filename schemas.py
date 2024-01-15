@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+# author classes
+
 class AuthorBase(BaseModel):
     firstname: str
     lastname: str | None = None
@@ -13,10 +15,11 @@ class Author(AuthorBase):
     class Config:
         from_attributes = True
 
-
 class AuthorUpdate(AuthorBase):
     firstname: str | None = None 
     lastname: str | None = None
+
+# poem classes
 
 class PoemBase(BaseModel):
     id: str
@@ -35,7 +38,6 @@ class PoemUpdate(BaseModel):
     translator_lastname: str | None = None
     isbn: str | None = None
 
-
 class Poem(BaseModel):
     id: str
     author_id: str
@@ -46,3 +48,23 @@ class PoemCreate(BaseModel):
     title: str | None = None
     poem: str
 
+# user classes
+    
+class UserBase(BaseModel):
+    id: str
+    username: str
+    password: str
+
+class User(BaseModel):
+    username: str
+    password: str
+
+class UserCreate(User):
+    pass
+
+class UserInfo(BaseModel):
+    id: str
+    username: str
+
+class UserUsername(BaseModel):
+    username: str

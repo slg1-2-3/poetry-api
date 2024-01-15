@@ -1,7 +1,10 @@
+from typing import Annotated
+
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-import crud, models, schemas
+import crud, models, schemas, security
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -16,6 +19,26 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# user functions
+
+@app.get("/users/me")
+def read_current_user(username: Annotated[str, Depends(security.get_current_user)]):
+    return {"username": username}
+        
+@app.post("/users/", response_model=schemas.UserInfo)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db=db, user=user)
+
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    form_data.password = crud.hash_password(form_data.password)
+    db_user = crud.get_user(db=db,user=form_data)
+    if not db_user:
+        raise HTTPException(status_code=400, detail="Incorrect Username or Password")
+    
+    return {"access_token": db_user.username, "token_type": "bearer"}
+
 
 # author functions
 
