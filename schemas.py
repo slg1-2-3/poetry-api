@@ -68,3 +68,11 @@ class UserInfo(BaseModel):
 
 class UserUsername(BaseModel):
     username: str
+
+# security classes 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: str | None = None
