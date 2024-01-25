@@ -15,7 +15,7 @@ import models, schemas
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-load_dotenv()
+load_dotenv('security_secrets.env')
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 
