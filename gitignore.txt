@@ -1,2 +1,2 @@
 db_creds.py
-security_secrets.py
+security_secrets.env

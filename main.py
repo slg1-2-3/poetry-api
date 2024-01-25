@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
@@ -5,13 +8,15 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-import crud, models, schemas, security, security_secrets
+import crud, models, schemas, security
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+load_dotenv()
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 # Dependency
 def get_db():
@@ -37,7 +42,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
     db_user = crud.get_user(db=db,user=form_data)
     if not db_user:
         raise HTTPException(status_code=400, detail="Incorrect Username or Password")
-    access_token_expires = timedelta(minutes=security_secrets.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
         data={"sub": db_user.username}, expires_delta=access_token_expires
         )
