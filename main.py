@@ -28,24 +28,24 @@ def get_db():
 
 # user functions
 
-@app.get("/users/me")
-def read_current_user(username: Annotated[str, Depends(security.get_current_user)]):
-    return {"username": username}
+@app.get("/users/me", response_model=schemas.UserBase)
+def read_users_me(
+    current_user: Annotated[schemas.UserBase, Depends(security.get_current_user )], db: Session = Depends(get_db)):
+    return current_user
         
 @app.post("/users/", response_model=schemas.UserInfo)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 @app.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> schemas.Token:
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> schemas.Token:
     form_data.password = security.hash_password(form_data.password)
     db_user = crud.get_user(db=db,user=form_data)
     if not db_user:
         raise HTTPException(status_code=400, detail="Incorrect Username or Password")
-    import pdb; pdb.set_trace()
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
-        data={"sub": db_user.username}, expires_delta=access_token_expires
+        data={"sub": db_user.username, "scopes": form_data.scopes}, expires_delta=access_token_expires
         )
     return schemas.Token(access_token=access_token, token_type="bearer")
 
